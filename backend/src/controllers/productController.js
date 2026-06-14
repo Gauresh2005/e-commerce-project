@@ -6,7 +6,7 @@ const path = require('path')
 
 async function getAllProducts(req,res) {
     const [products] = await db.query(
-        'SELECT * FROM Products ORDER BY created_at DESC',
+        'SELECT * FROM products ORDER BY created_at DESC',
     )
     // Normalize image paths to ensure they start with '/'
     const normalized = products.map(p => ({
@@ -22,7 +22,7 @@ async function getProductById(req,res) {
     const { id } = req.params
 
     const [products] = await db.query(
-        'SELECT * FROM Products WHERE id = ?',
+        'SELECT * FROM products WHERE id = ?',
         [id]
     )
     if (products.length === 0) {
@@ -67,14 +67,14 @@ async function createProduct(req,res) {
     let result
     try {
         [result] = await db.query(
-            'INSERT INTO Products (name, description, price, stock, image) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO products (name, description, price, stock, image) VALUES (?, ?, ?, ?, ?)',
             [name, description || null, price, stock || 0, savedImage]
         )
     } catch (err) {
         // If DB doesn't have `image` column, fall back to insert without image
         if (err && err.code === 'ER_BAD_FIELD_ERROR' && /Unknown column 'image'/.test(err.message)) {
             [result] = await db.query(
-                'INSERT INTO Products (name, description, price, stock) VALUES (?, ?, ?, ?)',
+                'INSERT INTO products (name, description, price, stock) VALUES (?, ?, ?, ?)',
                 [name, description || null, price, stock || 0]
             )
         } else {
@@ -93,7 +93,7 @@ async function updateProduct(req,res) {
     const { name, description, price, stock } = req.body
     
     const[existing] = await db.query(
-        'SELECT id FROM Products WHERE id = ?',
+        'SELECT id FROM products WHERE id = ?',
         [id]
     )
     if (existing.length === 0) {
@@ -119,7 +119,7 @@ async function updateProduct(req,res) {
     // using COALESCE() to update the given fields and use old values in remaining fields
     try {
         await db.query(
-            `UPDATE Products
+            `UPDATE products
             SET
                 name = COALESCE(?, name),
                 description = COALESCE(?, description),
@@ -133,7 +133,7 @@ async function updateProduct(req,res) {
         // If DB doesn't have `image` column, fall back to update without image
         if (err && err.code === 'ER_BAD_FIELD_ERROR' && /Unknown column 'image'/.test(err.message)) {
             await db.query(
-                `UPDATE Products
+                `UPDATE products
                 SET
                     name = COALESCE(?, name),
                     description = COALESCE(?, description),
@@ -156,7 +156,7 @@ async function deleteProduct(req,res) {
     const { id } = req.params
     
     const[existing] = await db.query(
-        'SELECT id FROM Products WHERE id = ?',
+        'SELECT id FROM products WHERE id = ?',
         [id]
     )
     if (existing.length === 0) {
@@ -164,7 +164,7 @@ async function deleteProduct(req,res) {
     }
 
     await db.query(
-        'DELETE FROM Products WHERE id = ?',
+        'DELETE FROM products WHERE id = ?',
         [id]
     )
     res.json({

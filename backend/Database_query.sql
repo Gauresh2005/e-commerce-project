@@ -53,4 +53,4 @@ CREATE TABLE order_items (
 );
 
 
-SELECT * FROM Products;
+SELECT * FROM products;

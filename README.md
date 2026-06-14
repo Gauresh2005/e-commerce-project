@@ -46,7 +46,7 @@ Database migration
 ------------------
 If you see errors like "Unknown column 'image'": add the image column:
 
-ALTER TABLE Products ADD COLUMN image VARCHAR(255) NULL;
+ALTER TABLE products ADD COLUMN image VARCHAR(255) NULL;
 
 (Apply using your MySQL client.)
 

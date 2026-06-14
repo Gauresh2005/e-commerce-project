@@ -15,7 +15,7 @@ async function getCart(req,res) {
             p.image,
             (c.quantity * p.price) AS subtotal
         FROM Cart c
-        INNER JOIN Products p
+        INNER JOIN products p
             ON c.product_id = p.id
         WHERE c.user_id = ?
         `, [userId]
@@ -48,7 +48,7 @@ async function addToCart(req,res) {
     }
 
     const [products] = await db.query(
-        'SELECT * FROM Products WHERE id = ?',
+        'SELECT * FROM products WHERE id = ?',
         [product_id]
     )
     
@@ -120,7 +120,7 @@ async function updateCart(req,res) {
     }
 
     const [products] = await db.query(
-        'SELECT stock FROM Products WHERE id = ?',
+        'SELECT stock FROM products WHERE id = ?',
         [productId]
     )
     // checking stock for desired quantity
