@@ -14,7 +14,7 @@ async function getCart(req,res) {
             p.stock,
             p.image,
             (c.quantity * p.price) AS subtotal
-        FROM Cart c
+        FROM cart c
         INNER JOIN products p
             ON c.product_id = p.id
         WHERE c.user_id = ?
@@ -64,7 +64,7 @@ async function addToCart(req,res) {
 
     // check if product is already added to cart
     const [existing] = await db.query(
-        'SELECT * FROM Cart WHERE user_id = ? AND product_id = ?',
+        'SELECT * FROM cart WHERE user_id = ? AND product_id = ?',
         [userId, product_id]
     )
 
@@ -80,7 +80,7 @@ async function addToCart(req,res) {
 
         // update the quantity
         await db.query(
-            'UPDATE Cart SET quantity = ? WHERE user_id = ? AND product_id = ?',
+            'UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?',
             [newQuantity, userId, product_id]
         )
         return res.json({
@@ -91,7 +91,7 @@ async function addToCart(req,res) {
 
     // if product is not added in the cart insert a new one
     await db.query(
-        'INSERT INTO Cart (user_id, product_id, quantity) VALUES (?, ?, ?)',
+        'INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)',
         [userId, product_id, quantity]
     )
     res.status(201).json({
@@ -110,7 +110,7 @@ async function updateCart(req,res) {
     }
 
     const [existing] = await db.query(
-        'SELECT * FROM Cart WHERE user_id = ? AND product_id = ?',
+        'SELECT * FROM cart WHERE user_id = ? AND product_id = ?',
         [userId, productId]
     )
 
@@ -129,7 +129,7 @@ async function updateCart(req,res) {
     }
 
     await db.query(
-        'UPDATE Cart SET quantity = ? WHERE user_id = ? AND product_id = ?',
+        'UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?',
         [quantity, userId, productId]
     )
     res.json({
@@ -142,7 +142,7 @@ async function removeCartItem(req,res) {
     const { productId } = req.params
     
     const [existing] = await db.query(
-        'SELECT * FROM Cart WHERE user_id = ? AND product_id = ?',
+        'SELECT * FROM cart WHERE user_id = ? AND product_id = ?',
         [userId, productId]
     )
     
@@ -152,7 +152,7 @@ async function removeCartItem(req,res) {
     }
     
     await db.query(
-        'DELETE FROM Cart WHERE user_id = ? AND product_id = ?',
+        'DELETE FROM cart WHERE user_id = ? AND product_id = ?',
         [userId, productId]
     )
     res.json({
@@ -165,7 +165,7 @@ async function clearCart(req,res) {
     const userId = req.user.id
     
     await db.query(
-        'DELETE FROM Cart WHERE user_id = ?',
+        'DELETE FROM cart WHERE user_id = ?',
         [userId]
     )
     res.json({
