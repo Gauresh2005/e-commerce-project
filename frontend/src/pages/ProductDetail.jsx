@@ -101,7 +101,7 @@ function ProductDetail() {
         <div>
           {product.image ? (
             <img
-              src={`http://localhost:3000${product.image}`}
+              src={`${import.meta.env.VITE_API_URL}${product.image}`}
               alt={product.name}
               style={{
                 width: '100%',

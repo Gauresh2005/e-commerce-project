@@ -19,7 +19,7 @@ function ProductForm({ product, onSuccess, onCancel }) {
   })
   const [imageFile, setImageFile]   = useState(null)
   const [imagePreview, setImagePreview] = useState(
-    product?.image ? `http://localhost:3000${product.image}` : null
+    product?.image ? `${import.meta.env.VITE_API_URL}${product.image}` : null
   )
   const [errors, setErrors]   = useState({})
   const [loading, setLoading] = useState(false)
@@ -34,7 +34,7 @@ function ProductForm({ product, onSuccess, onCancel }) {
       stock:       product?.stock       || '',
     })
     setImageFile(null)
-    setImagePreview(product?.image ? `http://localhost:3000${product.image}` : null)
+    setImagePreview(product?.image ? `${import.meta.env.VITE_API_URL}${product.image}` : null)
     setErrors({})
   }, [product])
 
